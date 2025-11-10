@@ -35,6 +35,7 @@ kp = -0.6
 #derivative gain, how fast is the error changing? adjust accordingly
 kd = -0.2
 #integral error, small consistent offsets over time
+#currently off, can be adjusted accordingly
 ki = 0.0
 previous_error = 0
 integral = 0
@@ -44,7 +45,7 @@ try:
         # Get the latest sensor reading
         lr.update()
         error = lr.get_offset()
-        #slow down with smaller lines
+        #slow down with tighter lines
         velocity = max(5, 15 - abs(error) * 0.3)
         # 1. Calculate the total error
         integral += error
