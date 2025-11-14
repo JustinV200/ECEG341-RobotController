@@ -30,7 +30,7 @@ class driver():
 
 
     def drive(self, v, w):
-        bias = .01
+        bias = -.025
         DUTY_CYCLE = int(0xffff)
         # split bias to left/right motors
         left_bias = 1.0 - bias/2

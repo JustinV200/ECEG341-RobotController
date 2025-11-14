@@ -6,7 +6,7 @@ import time
 
 class lineFollower():
 
-    def __init__(self, kp = -0.3, kd = -0.5, MAX_VELOCITY = 50, MIN_VELOCITY = 20, velAdjustor = 0.5, ki = 0.0):
+    def __init__(self, kp = -0.3, kd = -0.5, MAX_VELOCITY = 5, MIN_VELOCITY = 5, velAdjustor = 0.5, ki = 0.0):
         #slalom
         #kp = -0.6
 

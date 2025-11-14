@@ -15,17 +15,25 @@ class robot_olympics:
             self.Gbot.follow()
         self.Gbot.stop()
     def straightLine(self):
-        for i in range(500):
+        self.Gbot.setStats(-0.3, -0.9, 50, 15, 0.3)
+        for i in range(180):
             self.Gbot.follow()
         self.Gbot.stop()
 
     def bullseye(self):
-        self.Gbot.setStats(-0.1, -0.7, 15,5, 0.5)
-        for i in range(400):
+        self.Gbot.setStats(-0.3, -0.9, 10,5, 0.5)
+        for i in range(650):
             self.Gbot.follow()
-        self.Gbot.straighten()
+        self.Gbot.stop()
+
+        for i in range(50):
+            self.Gbot.setStats(-0.1, -1, 2,2, 0.5)
+
+        self.Gbot.stop()
+        time.sleep(2)
+        #self.Gbot.straighten()
         self.Gbot.drive(20, 0)
-        time.sleep(4.5)
+        time.sleep(4)
         self.Gbot.stop()
 
 
