@@ -53,3 +53,9 @@ class driver():
         else:
             self.lMotor_f.duty_u16(0)
             self.lMotor_r.duty_u16(int(abs(lV * 1541) * left_bias))
+            
+    def stop(self):
+        self.rMotor_f.duty_u16(0)
+        self.rMotor_r.duty_u16(0)
+        self.lMotor_f.duty_u16(0)
+        self.lMotor_r.duty_u16(0)
