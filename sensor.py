@@ -3,12 +3,13 @@ import time
 import math
 
 class LineReader():
-    def __init__(self, pins = [0,1,2,3,4,5], positions = [-20, -12, -4, 4, 12, 20]):
+    def __init__(self, pins = [0,1,2,3,4,5], positions = [-20, -12, -4, 4, 12, 20], mode = "black"):
         self.pins = pins
         self.positions = positions
         self.offset = 0
         self.darkness = 0
         self.confidence = 0
+        self.mode = mode
     def calculate_confidence(self, data_list):
         mean = sum(data_list) / len(data_list)
         squared_differences = [(x - mean) ** 2 for x in data_list]
@@ -62,6 +63,25 @@ class LineReader():
             weightedPosition += item * self.positions[iterator]
             iterator+=1
         self.offset = weightedPosition
+
+        # dynamic threshold: gray mode is more tolerant
+        #this stopped working completely for some reason day before competition, smth with equipment i assume?
+        if self.mode == "gray":
+            threshold = 40   # detect weaker contrast
+        else:
+            threshold = 100  # original black-line threshold
+
+        if max(subDecayTimes) - min(subDecayTimes) < threshold:
+            self.offset = None
+        else:
+            weightedPosition = sum(normalizedDecayTimes[i] * self.positions[i] for i in range(len(self.positions)))
+            self.offset = weightedPosition
+
+        print("subDecayTimes=", subDecayTimes)
+        print("max - min =", max(subDecayTimes) - min(subDecayTimes))
+        print("mode =", self.mode)
+
+
     def get_offset(self):
         return self.offset
     def get_darkness(self):

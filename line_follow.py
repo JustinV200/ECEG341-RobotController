@@ -56,34 +56,30 @@ class lineFollower():
         self.previous_error = 0
         self.integral = 0
 
-    def follow(self):
+    def follow(self, darkness="black", erroradjustor=0):
+        self.lr.mode = darkness
         self.lr.update()
         error = self.lr.get_offset()
 
+        if error is None:
+            # Line lost: skip PID update but keep last velocity
+            self.m.drive(self.velocity, 0)  # maintain forward speed, no angular change
+            return
 
-        #slow down with tighter lines and higher error, speed up otherwise
+        error += erroradjustor
+
+        # Velocity based on error
         self.velocity = max(self.MIN_VELOCITY, self.MAX_VELOCITY - abs(error) * self.velAdjustor)
 
+        # PID calculation
         self.integral += error
-        #get derivative
         derivative = error - self.previous_error
-        #adjusts turning strength based on how far off-center the line is and how fast that error is changing.        
         angular_velocity = self.kp * error + self.ki * self.integral + self.kd * derivative
-        #save previous serror for future calculations
         self.previous_error = error
-        # 2. Calculate the 'angular_velocity' based on the error
-        print(f"Error: {error:.2f}, PID_AngVel: {angular_velocity:.2f}, Velocity: {self.velocity:.2f}")
-        #angular_velocity = (kp-(error/100)) * error # given
-        # --- END CONTROL LOGIC ---
-        # Send the command to the motors
-        # Note: We use -angular_velocity if your motor
-        # class defines a positive angle as a left turn.
-        # This depends on your motor.drive() implementation.
-        # Let's start by assuming a positive value turns right.
+
         self.m.drive(self.velocity, angular_velocity)
-        # A small delay is not needed if your loop
-        # is fast, but 1ms can be okay. (try differnt values!)
         time.sleep_ms(1)
+
 
     def stop(self):
         self.m.stop()
